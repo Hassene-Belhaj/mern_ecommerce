@@ -4,11 +4,13 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@radix-ui/react-select";
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+
 import React from "react";
 
 const CommonForm = ({
@@ -17,8 +19,8 @@ const CommonForm = ({
   setFormData,
   buttonText,
   onSubmit,
+  checkFormSubmit,
 }) => {
-  console.log(formData);
   function renderInputsByComponentType(formItem) {
     let element = null;
     const value = formData[formItem.name] || "";
@@ -37,6 +39,7 @@ const CommonForm = ({
                 [formItem.name]: event.target.value,
               })
             }
+            className="bg-white"
           />
         );
 
@@ -52,17 +55,19 @@ const CommonForm = ({
             }
             value={value}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger>
               <SelectValue placeholder={formItem.label} />
             </SelectTrigger>
             <SelectContent>
-              {formItem.options && formItem.options.length > 0
-                ? formItem.options.map((optionItem) => (
-                    <SelectItem key={optionItem.id} value={optionItem.id}>
-                      {optionItem.label}
-                    </SelectItem>
-                  ))
-                : null}
+              <SelectGroup>
+                {formItem.options && formItem.options.length > 0
+                  ? formItem.options.map((optionItem, i) => (
+                      <SelectItem key={i} value={optionItem.label}>
+                        {optionItem.label}
+                      </SelectItem>
+                    ))
+                  : null}
+              </SelectGroup>
             </SelectContent>
           </Select>
         );
@@ -81,6 +86,7 @@ const CommonForm = ({
                 [formItem.name]: event.target.value,
               })
             }
+            className="bg-white"
           />
         );
 
@@ -100,6 +106,7 @@ const CommonForm = ({
                 [formItem.name]: event.target.value,
               })
             }
+            className="bg-white"
           />
         );
         break;
@@ -117,7 +124,10 @@ const CommonForm = ({
           </div>
         );
       })}
-      <Button className="mt-4 w-full rounded-full">
+      <Button
+        disabled={checkFormSubmit}
+        className="mt-4 h-10 w-full rounded-full"
+      >
         {buttonText || "Submit"}
       </Button>
     </form>

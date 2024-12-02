@@ -1,15 +1,12 @@
-import React from "react";
-import { Button } from "./components/ui/button";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import SignUp from "./pages/auth/signUp";
 import AuthLayout from "./components/AuthLayout/AuthLayout";
 import SignIn from "./pages/auth/SignIn";
-import Dashboard from "./pages/admin-view/Dashboard";
 import Features from "./pages/admin-view/Features";
-import Products from "./pages/admin-view/Products";
+import AdminProducts from "./pages/admin-view/AdminProducts";
 import Orders from "./pages/admin-view/Orders";
-import Admin_view from "./components/admin-view/Admin_view";
-import Shopping_view from "./components/shopping-view/Shopping_view";
+import ShoppingLayout from "./components/shopping-view/shoppingLayout";
 import NotFound from "./pages/not_found/NotFound";
 import Home from "./pages/shopping-view/Home";
 import Listing from "./pages/shopping-view/Listing";
@@ -17,11 +14,29 @@ import Account from "./pages/shopping-view/Account";
 import Checkout from "./pages/shopping-view/CheckOut";
 import CheckAuth from "./components/checkAuth/CheckAuth";
 import Unauth_page from "./pages/unauth-page/Unauth_page";
+import { useDispatch, useSelector } from "react-redux";
+import { checkAuth } from "./redux/slices/auth_slice/authSlice";
+import DashboardLayout from "./components/admin-view/DashboardLayout";
+import Dashboard from "./pages/admin-view/Dashboard";
+
+export const URL = import.meta.env.VITE_REACT_BASEURL;
 
 const App = () => {
-  const isAuthenticated = false;
-  const user = null;
+  const { isAuthenticated, user, isLoading } = useSelector(
+    (state) => state.auth
+  );
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
+  if (isLoading)
+    return (
+      <div>
+        <h1>...loading</h1>
+      </div>
+    );
   return (
     <Routes>
       <Route
@@ -40,14 +55,14 @@ const App = () => {
         path="/admin"
         element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-            <Admin_view />
+            <DashboardLayout />
           </CheckAuth>
         }
       >
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="features" element={<Features />} />
         <Route path="orders" element={<Orders />} />
-        <Route path="products" element={<Products />} />
+        <Route path="products" element={<AdminProducts />} />
         <Route />
       </Route>
 
@@ -55,7 +70,7 @@ const App = () => {
         path="/shop"
         element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-            <Shopping_view />
+            <ShoppingLayout />
           </CheckAuth>
         }
       >

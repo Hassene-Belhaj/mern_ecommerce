@@ -14,10 +14,18 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
       return <Navigate to={"/shop/home"} />;
     }
   }
-  if (isAuthenticated && user?.role !== "admin" && pathname.startsWith("/admin")) {
+  if (
+    isAuthenticated &&
+    user?.role !== "admin" &&
+    pathname.startsWith("/admin")
+  ) {
     return <Navigate to={"/unauth-page"} />;
   }
-  if (isAuthenticated && user?.role === "admin" && pathname.startsWith("/shop")) {
+  if (
+    isAuthenticated &&
+    user?.role === "admin" &&
+    pathname.startsWith("/shop")
+  ) {
     return <Navigate to={"/admin/dashboard"} />;
   }
   return <>{children}</>;
